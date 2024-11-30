@@ -73,7 +73,7 @@ function createWheel() {
 // Spin the wheel with crazy fast animation
 function spinWheel() {
   if (spinsLeft <= 0) {
-    alert("No spins left! Try again after 4 hours.");
+    alert("No spins left! Try again after 1 hour.");
     return;
   }
 
