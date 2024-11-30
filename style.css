@@ -15,20 +15,36 @@
   --link-hover: #feca57;
 }
 
-* {
+*, *::before, *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  will-change: transform, opacity; /* Performance hint */
+  transition: all 0.2s ease-out;
 }
 
-/* Cool Link Styling */
+body {
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+  color: var(--fg-primary);
+  text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-attachment: fixed;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+
+/* Optimized Link Styling */
 a {
   position: relative;
   color: var(--link-primary);
   text-decoration: none;
   font-weight: 600;
-  overflow: hidden;
+  transition: color 0.2s ease;
   display: inline-block;
 }
 
@@ -42,7 +58,7 @@ a::before {
   background: linear-gradient(to right, var(--link-primary), var(--link-hover));
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transition: transform 0.3s ease;
 }
 
 a:hover::before {
@@ -52,12 +68,10 @@ a:hover::before {
 
 a:hover {
   color: var(--link-hover);
-  text-shadow: 0 0 10px rgba(254, 202, 87, 0.5);
 }
 
 /* Neon Underline Effect on Hover */
 a.neon-link {
-  display: inline-block;
   padding: 0 5px;
   transition: all 0.3s ease;
 }
@@ -66,8 +80,7 @@ a.neon-link:hover {
   color: var(--christmas-gold);
   text-shadow: 
     0 0 5px var(--christmas-gold),
-    0 0 10px var(--christmas-gold),
-    0 0 15px var(--christmas-gold);
+    0 0 10px var(--christmas-gold);
 }
 
 /* External Link Indicator */
@@ -83,22 +96,7 @@ a.external-link:hover::after {
   opacity: 1;
 }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
-  color: var(--fg-primary);
-  text-align: center;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background-attachment: fixed;
-  perspective: 1500px;
-}
-
-/* Christmas-themed background effect */
+/* Lightweight Background Effect */
 body::before {
   content: "";
   position: fixed;
@@ -108,53 +106,57 @@ body::before {
   bottom: -50%;
   width: 200%;
   height: 200%;
-  background: rgba(26, 59, 44, 0.7);
+  background: rgba(26, 59, 44, 0.5);
   background-image: 
-    radial-gradient(ellipse at center, rgba(255, 0, 0, 0.1) 0%, transparent 70%),
-    radial-gradient(ellipse at bottom right, rgba(46, 204, 113, 0.1) 0%, transparent 50%);
+    radial-gradient(ellipse at center, rgba(255, 0, 0, 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse at bottom right, rgba(46, 204, 113, 0.05) 0%, transparent 50%);
   animation: snowfall 10s infinite linear;
   transform: rotate(-45deg);
   z-index: -1;
+  opacity: 0.5;
 }
 
 @keyframes snowfall {
   0% { 
-    background-position: 0 0, 0 0;
-    opacity: 0.7;
+    background-position: 0 0;
+    opacity: 0.5;
   }
   100% { 
-    background-position: 100px 200px, -100px -100px;
-    opacity: 0.9;
+    background-position: 100px 200px;
+    opacity: 0.7;
   }
 }
 
 header {
-  margin: 30px 0;
-  text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  margin: 1.5rem 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  max-width: 100%;
+  padding: 0 1rem;
 }
 
 header h1 {
-  font-size: 3.5rem;
+  font-size: clamp(2rem, 6vw, 3.5rem);
   color: var(--christmas-gold);
   letter-spacing: 2px;
   font-weight: 700;
   text-transform: uppercase;
   text-shadow: 
-    2px 2px 4px var(--christmas-red),
-    -2px -2px 4px var(--christmas-green);
+    1px 1px 2px var(--christmas-red),
+    -1px -1px 2px var(--christmas-green);
 }
 
 header p {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 3vw, 1.2rem);
   color: var(--text-subtle);
   max-width: 600px;
-  margin: 15px auto;
+  margin: 1rem auto;
+  padding: 0 1rem;
 }
 
 .christmas-promo {
-  margin: 20px 0;
-  background: rgba(255, 0, 0, 0.2);
-  padding: 15px;
+  margin: 1rem 0;
+  background: rgba(255, 0, 0, 0.1);
+  padding: 0.75rem;
   border-radius: 10px;
   border: 2px dashed var(--christmas-gold);
   font-weight: 600;
@@ -163,64 +165,69 @@ header p {
 
 @keyframes pulse {
   0% { transform: scale(1); }
-  100% { transform: scale(1.05); }
+  100% { transform: scale(1.03); }
 }
 
 .wheel-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 30px;
-  transform-style: preserve-3d;
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 400px;
+  perspective: 1000px;
 }
 
 #wheel {
   position: relative;
-  width: 350px;
-  height: 350px;
-  border: 8px solid rgba(255,255,255,0.1);
+  width: 90%;
+  max-width: 350px;
+  aspect-ratio: 1 / 1;
+  border: 4px solid rgba(255,255,255,0.1);
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 
-    0 20px 50px rgba(0,0,0,0.3),
-    0 0 20px var(--christmas-gold);
-  transform: rotateX(30deg) rotateY(10deg);
-  background: rgba(44, 94, 71, 0.5);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  background: rgba(44, 94, 71, 0.4);
+  transform-style: preserve-3d;
+  transform: rotateX(20deg) rotateY(10deg);
 }
 
 #wheel .section {
   position: absolute;
   width: 50%;
   height: 50%;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
   transform-origin: 100% 100%;
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   color: var(--fg-primary);
   font-weight: 600;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  border: 2px solid var(--christmas-gold);
-  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  border: 1px solid var(--christmas-gold);
+  transition: transform 0.3s ease;
 }
 
 #wheel .section:hover {
-  transform: scale(1.05) rotate(5deg);
-  box-shadow: 0 0 20px rgba(255,255,255,0.2);
+  transform: scale(1.03) rotate(3deg);
 }
 
-#wheel .section:nth-child(odd) { background: rgba(255, 0, 0, 0.2); transform: rotate(calc(51.43deg * var(--index))); }
-#wheel .section:nth-child(even) { background: rgba(46, 204, 113, 0.2); transform: rotate(calc(51.43deg * var(--index))); }
+#wheel .section:nth-child(odd) { 
+  background: rgba(255, 0, 0, 0.1); 
+  transform: rotate(calc(51.43deg * var(--index))); 
+}
+#wheel .section:nth-child(even) { 
+  background: rgba(46, 204, 113, 0.1); 
+  transform: rotate(calc(51.43deg * var(--index))); 
+}
 
-/* iOS-style 3D Neon Button */
 #spin-btn {
-  position: relative;
-  margin-top: 30px;
-  padding: 15px 30px;
-  font-size: 1.2rem;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
   background: linear-gradient(
     145deg, 
     var(--christmas-red), 
@@ -234,56 +241,49 @@ header p {
   text-transform: uppercase;
   letter-spacing: 1px;
   
-  /* 3D Effect */
   box-shadow: 
-    0 10px 20px rgba(0,0,0,0.3),
-    0 0 15px var(--christmas-gold),
-    inset 0 -5px 10px rgba(0,0,0,0.2);
+    0 8px 15px rgba(0,0,0,0.2),
+    0 0 10px var(--christmas-gold);
   
-  transform: translateZ(20px) scale(1);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s ease;
 }
 
 #spin-btn:hover {
-  transform: translateZ(30px) scale(1.05) rotateX(-5deg);
+  transform: scale(1.05);
   box-shadow: 
-    0 15px 30px rgba(0,0,0,0.4),
-    0 0 25px var(--christmas-gold),
-    inset 0 -8px 15px rgba(0,0,0,0.3);
+    0 10px 20px rgba(0,0,0,0.3),
+    0 0 15px var(--christmas-gold);
 }
 
 #spin-btn:active {
-  transform: translateZ(10px) scale(0.95);
+  transform: scale(0.95);
   box-shadow: 
-    0 5px 10px rgba(0,0,0,0.2),
-    0 0 10px var(--christmas-gold),
-    inset 0 -3px 5px rgba(0,0,0,0.2);
+    0 4px 8px rgba(0,0,0,0.1),
+    0 0 5px var(--christmas-gold);
 }
 
 #result {
-  margin-top: 30px;
-  background: rgba(26, 59, 44, 0.7);
+  margin-top: 2rem;
+  background: rgba(26, 59, 44, 0.6);
   border-radius: 15px;
-  padding: 20px;
+  padding: 1.25rem;
   max-width: 500px;
-  width: 100%;
-  box-shadow: 
-    0 10px 30px rgba(0,0,0,0.3),
-    0 0 15px var(--christmas-gold);
-  border: 3px solid var(--christmas-gold);
+  width: 90%;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  border: 2px solid var(--christmas-gold);
 }
 
 #result-message {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--christmas-gold);
   text-shadow: 
-    0 0 10px var(--christmas-red),
-    0 0 20px var(--christmas-green);
+    0 0 5px var(--christmas-red),
+    0 0 10px var(--christmas-green);
 }
 
 #reward-details {
-  margin-top: 20px;
+  margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -291,21 +291,21 @@ header p {
 
 #reward-pin {
   width: 100%;
-  padding: 15px;
-  margin-bottom: 15px;
+  padding: 1rem;
+  margin-bottom: 1rem;
   text-align: center;
-  font-size: 1.2rem;
-  border: 3px dashed var(--text-subtle);
+  font-size: 1rem;
+  border: 2px dashed var(--text-subtle);
   border-radius: 10px;
   color: var(--fg-primary);
-  background: rgba(26, 59, 44, 0.7);
-  letter-spacing: 2px;
+  background: rgba(26, 59, 44, 0.5);
+  letter-spacing: 1px;
   font-weight: 600;
 }
 
 #copy-btn {
-  position: relative;
-  padding: 12px 25px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
   background: linear-gradient(
     145deg, 
     var(--christmas-red), 
@@ -319,30 +319,25 @@ header p {
   text-transform: uppercase;
   letter-spacing: 1px;
   
-  /* 3D Effect */
   box-shadow: 
-    0 8px 15px rgba(0,0,0,0.2),
-    0 0 12px var(--christmas-gold),
-    inset 0 -4px 8px rgba(0,0,0,0.2);
+    0 6px 12px rgba(0,0,0,0.2),
+    0 0 10px var(--christmas-gold);
   
-  transform: translateZ(15px) scale(1);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.3s ease;
 }
 
 #copy-btn:hover {
-  transform: translateZ(25px) scale(1.05) rotateX(-5deg);
+  transform: scale(1.05);
   box-shadow: 
-    0 12px 25px rgba(0,0,0,0.3),
-    0 0 20px var(--christmas-gold),
-    inset 0 -6px 12px rgba(0,0,0,0.3);
+    0 8px 16px rgba(0,0,0,0.3),
+    0 0 15px var(--christmas-gold);
 }
 
 #copy-btn:active {
-  transform: translateZ(5px) scale(0.95);
+  transform: scale(0.95);
   box-shadow: 
-    0 4px 8px rgba(0,0,0,0.2),
-    0 0 8px var(--christmas-gold),
-    inset 0 -2px 4px rgba(0,0,0,0.2);
+    0 4px 8px rgba(0,0,0,0.1),
+    0 0 5px var(--christmas-gold);
 }
 
 .hidden {
@@ -350,26 +345,24 @@ header p {
 }
 
 /* Responsive Design */
-@media (max-width: 600px) {
-  header h1 {
-    font-size: 2.5rem;
+@media (max-width: 768px) {
+  body {
+    padding: 0.5rem;
+  }
+
+  .wheel-container {
+    max-width: 100%;
   }
 
   #wheel {
-    width: 300px;
-    height: 300px;
+    width: 80%;
   }
 
-  .christmas-promo {
+  header h1 {
+    letter-spacing: 1px;
+  }
+
+  header p, .christmas-promo {
     font-size: 0.9rem;
-    padding: 10px;
-  }
-
-  a {
-    font-size: 0.95em;
-  }
-  
-  a.neon-link {
-    padding: 0 3px;
   }
 }
