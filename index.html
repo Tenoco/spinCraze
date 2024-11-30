@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SpinCraze - Spin the wheel to win exciting rewards like Glo recharge pins!">
+  <title>SpinCraze</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>SpinCraze</h1>
+      <p>Spin the wheel and win amazing rewards!</p>
+    </header>
+    <main>
+      <div class="wheel-container">
+        <div id="wheel">
+          <!-- Sections will be dynamically created by JavaScript -->
+        </div>
+        <button id="spin-btn">Spin the Wheel</button>
+      </div>
+      <div id="result" class="hidden">
+        <p id="result-message"></p>
+        <div id="reward-details" class="hidden">
+          <input type="text" id="reward-pin" readonly>
+          <button id="copy-btn">Copy Pin</button>
+          <p>Send a screenshot to <a href="https://wa.me/08076556252" target="_blank">08076556252</a> on WhatsApp!</p>
+        </div>
+      </div>
+      <div id="event-status" class="hidden"></div>
+    </main>
+    <footer>
+      <p>&copy; 2024 SpinCraze</p>
+    </footer>
+  </div>
+</body>
+</html>
