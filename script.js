@@ -8,6 +8,20 @@ const rewardPin = document.getElementById("reward-pin");
 const copyBtn = document.getElementById("copy-btn");
 const eventStatusDiv = document.getElementById("event-status");
 
+// Reward Configuration with Probabilities
+const REWARD_CONFIG = {
+  totalSpins: 5,
+  cooldownTime: 1 * 60 * 60 * 1000, // 1 hour
+  probabilities: {
+    realPinChance: 0.3, // 30% chance of getting a real pin
+    pinTypes: [
+      { name: "N200 Recharge Pin", value: 200, probability: 0.1 },
+      { name: "N100 Recharge Pin", value: 100, probability: 0.2 },
+      { name: "False Recharge", value: 0, probability: 0.7 }
+    ]
+  }
+};
+
 // Utility function to generate random pin
 function generateRandomPin(length = 15) {
   return Array.from(
@@ -16,36 +30,51 @@ function generateRandomPin(length = 15) {
   ).join('');
 }
 
-// Generate unique real pins
-const realPins = [
-  { name: "N200 Recharge Pin", pin: "123456789012345", isReal: true },
-  { name: "N100 Recharge Pin", pin: "987654321098765", isReal: true },
-  { name: "N100 Recharge Pin", pin: "112233445566778", isReal: true }
-];
+// Generate rewards based on probability
+function generateRewards() {
+  const rewards = [];
+  const { probabilities } = REWARD_CONFIG;
 
-// Generate fake pins
-const fakePins = Array.from({ length: 7 - realPins.length }, () => ({
-  name: "False Recharge",
-  pin: generateRandomPin(),
-  isReal: false
-}));
+  // Create real pins with different probabilities
+  const realPinTypes = probabilities.pinTypes.filter(pin => pin.value > 0);
+  
+  realPinTypes.forEach(pinType => {
+    const count = Math.ceil(probabilities.realPinChance * 10 * pinType.probability);
+    for (let i = 0; i < count; i++) {
+      rewards.push({
+        name: pinType.name,
+        pin: generateRandomPin(),
+        isReal: true,
+        value: pinType.value
+      });
+    }
+  });
 
-// Combine and shuffle pins
-const rewards = [
-  ...realPins, 
-  ...fakePins
-].sort(() => Math.random() - 0.5);
+  // Fill remaining slots with fake pins
+  const fakePinCount = 15 - rewards.length;
+  const fakePins = Array.from({ length: fakePinCount }, () => ({
+    name: "False Recharge",
+    pin: generateRandomPin(),
+    isReal: false,
+    value: 0
+  }));
+
+  return [...rewards, ...fakePins].sort(() => Math.random() - 0.5);
+}
 
 // Event State Control
 let eventState = "active";
-let spinsLeft = localStorage.getItem("spinsLeft") || 5;
+let spinsLeft = localStorage.getItem("spinsLeft") || REWARD_CONFIG.totalSpins;
 let spinCooldown = localStorage.getItem("spinCooldown");
 
 // Update spins after cooldown
 if (spinCooldown && Date.now() > spinCooldown) {
-  spinsLeft = 5;
+  spinsLeft = REWARD_CONFIG.totalSpins;
   localStorage.removeItem("spinCooldown");
 }
+
+// Generate rewards
+const rewards = generateRewards();
 
 // Initialize the wheel and event
 function initialize() {
@@ -73,7 +102,7 @@ function createWheel() {
 // Spin the wheel with crazy fast animation
 function spinWheel() {
   if (spinsLeft <= 0) {
-    alert("No spins left! Try again after 1 hour.");
+    alert(`No spins left! Try again after ${REWARD_CONFIG.cooldownTime / (60 * 60 * 1000)} hour.`);
     return;
   }
 
@@ -83,7 +112,7 @@ function spinWheel() {
   spinsLeft--;
   localStorage.setItem("spinsLeft", spinsLeft);
   if (spinsLeft === 0) {
-    const cooldownTime = Date.now() + 1 * 60 * 60 * 1000; // 1 hour
+    const cooldownTime = Date.now() + REWARD_CONFIG.cooldownTime;
     localStorage.setItem("spinCooldown", cooldownTime);
   }
   updateSpinButton();
@@ -131,7 +160,7 @@ function showResult(reward) {
   
   if (reward.isReal) {
     // Winning scenario
-    resultMessage.textContent = `Congratulations! You've won a ${reward.name}!`;
+    resultMessage.textContent = `Congratulations! You've won a ${reward.name} worth N${reward.value}!`;
     resultMessage.style.color = '#50fa7b'; // Neon green from previous CSS
     rewardPin.value = reward.pin;
     
